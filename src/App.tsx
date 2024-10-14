@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {FC, useState} from 'react';
+import Users from "./components/users/Users";
+import {IPosts} from "./models/IPosts";
+import {IUser} from "./models/IUser";
+import {getPosts} from "./services/api.service";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+const App:FC = () => {
+
+    const [posts, setPosts] = useState<IPosts[]>([]);
+    let lift = (user:IUser) => {
+        getPosts(user)
+            .then((response: IPosts[]) => {
+                setPosts(response)
+            })
+    }
+
+    return (
+    <div>
+      <Users lift={lift}/>
+
+        <hr/>
+            {
+                posts.map(post => <div><br/>id:{post.id}
+                    <div>title: {post.title}</div>
+                    <div>body: {post.body}</div>
+                </div>)
+            }
+        <hr/>
     </div>
+
   );
 }
 
